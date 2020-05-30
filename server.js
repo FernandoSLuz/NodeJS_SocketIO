@@ -12,24 +12,25 @@ http.listen(3000, function(){
 });
 //SocketIO vem aqui
 io.on("connection", function (client) {
-    client.emit("connected", "You have connected to the server.");
+    var clientId = client.id
+    client.emit("connected", {"clientId": clientId});
 
     client.on("avatarCreated", function(msg){
         var avatar = msg
-        avatar["user_id"] = client.id
+        avatar["clientId"] = clientId
         client.broadcast.emit("newAvatar", avatar);
     });
 
     client.on("avatarTransformUpdate", function(msg){
         var avatar = msg
-        avatar["user_id"] = client.id
+        avatar["clientId"] = clientId
         client.broadcast.emit("otherAvatarTransformUpdate", avatar)
     });
     client.on("disconnect", function(){
         avatar = {}
-        avatar["user_id"] = client.id
+        avatar["clientId"] = clientId
         client.broadcast.emit("destroyThisAvatar", avatar)
-        delete clients[client.id];
+        delete clients[clientId];
     });
 });
 
