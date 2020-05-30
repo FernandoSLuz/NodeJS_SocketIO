@@ -13,12 +13,13 @@ http.listen(3000, function(){
 //SocketIO vem aqui
 io.on("connection", function (client) {
     var clientId = client.id
+    //EMIT GET ALL USERS
     client.emit("connected", {"clientId": clientId});
 
     client.on("avatarCreated", function(msg){
         var avatar = msg
         avatar["clientId"] = clientId
-        client.broadcast.emit("newAvatar", avatar);
+        client.broadcast.emit("newAvatarCreated", avatar);
     });
 
     client.on("avatarTransformUpdate", function(msg){
@@ -27,6 +28,7 @@ io.on("connection", function (client) {
         client.broadcast.emit("otherAvatarTransformUpdate", avatar)
     });
     client.on("disconnect", function(){
+        console.log("disconected")
         avatar = {}
         avatar["clientId"] = clientId
         client.broadcast.emit("destroyThisAvatar", avatar)
