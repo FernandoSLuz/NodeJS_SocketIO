@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var clients = {};
-
+var count = 0;
 app.get('/', function(req, res){
 res.send('server is running');
 });
@@ -24,11 +24,13 @@ io.on("connection", function (client) {
 
     client.on("avatarTransformUpdate", function(msg){
         var avatar = msg
+        console.log(count)
+        count = count + 1
         avatar["clientId"] = clientId
+        avatar
         client.broadcast.emit("otherAvatarTransformUpdate", avatar)
     });
     client.on("disconnect", function(){
-        console.log("disconected")
         avatar = {}
         avatar["clientId"] = clientId
         client.broadcast.emit("destroyThisAvatar", avatar)
