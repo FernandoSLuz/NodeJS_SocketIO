@@ -24,7 +24,6 @@ io.on("connection", function (client) {
 
     client.on("avatarTransformUpdate", function(msg){
         var avatar = msg
-        console.log(count)
         count = count + 1
         avatar["clientId"] = clientId
         avatar
